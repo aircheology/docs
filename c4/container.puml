@@ -1,0 +1,42 @@
+@startuml container
+person operator
+person client
+
+collections CaptionedImageDatasets [
+  Captioned Image Datasets
+  ---
+  COCO2014, Troyan Mueseum Photos
+]
+
+rectangle SemanticSearcher as "Semantic Searcher" #line:crimson {
+    node SemSearchSvc [
+        Semantic Search Service
+    ]
+
+    database SemSearchDB [
+        Semantic Search DB
+    ]
+
+    folder ImageStore as "Image Store"
+
+    node DatasetSeeder [
+        Dataset Seeder
+    ]
+
+    node SemSearchUI [
+        Semantic Search UI
+    ]
+
+    SemSearchSvc --> SemSearchDB: Uses
+    SemSearchSvc --> ImageStore: Uses
+    
+    DatasetSeeder --> SemSearchDB: Store image metadata
+    DatasetSeeder --> ImageStore: Store images
+    DatasetSeeder --> CaptionedImageDatasets: Consumes
+    operator --> DatasetSeeder: Uses
+
+    SemSearchUI --> SemSearchSvc: Uses
+    operator --> SemSearchSvc: Trigger training
+    client --> SemSearchUI: Uses
+}
+@enduml
