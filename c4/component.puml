@@ -1,0 +1,54 @@
+@startuml component
+person operator
+
+node SemSearchUI [
+    Semantic Search UI
+]
+
+folder ImageStore as "Image Store"
+
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle VocTreeSvc #crimson [
+        Vocabulary Tree Service
+        ---
+        Provides use cases for
+        training, populating,
+        replacing and searching
+        a vocabulary tree index.
+    ]
+    rectangle SemSearchSvc #crimson [
+        Semantic Search Service
+        ---
+        Composes vocabulary trees
+        to provide search of images
+        with and without captions.
+        Can fetch image metadata.
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+        ---
+        Provides REST API to trigger
+        start of training. Manages 
+        training and population of 
+        vocabulary trees in the
+        background.
+    ]
+    rectangle ImageSearchController as "Image Search Controller" #crimson
+
+    SemSearchSvc --> VocTreeSvc: Uses
+    SemSearchSvc --> SemSearchDB: Uses
+    VocTreeSvc --> SemSearchDB: Uses
+    
+    TrainController --> VocTreeSvc: Uses
+    ImageSearchController --> SemSearchSvc: Uses
+    operator --> TrainController: Trigger training
+    
+    SemSearchSvc --> ImageStore: Read images
+
+    SemSearchUI --> ImageSearchController: Uses
+}
+@enduml

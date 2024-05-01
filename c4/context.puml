@@ -1,0 +1,21 @@
+@startuml context
+person operator
+person client
+
+rectangle SemanticSearcher #crimson [
+  Semantic Searcher
+  ---
+  performs semantic search of
+  historical images
+]
+
+collections CaptionedImageDatasets [
+  Captioned Image Datasets
+  ---
+  COCO2014, Troyan Mueseum Photos
+]
+
+CaptionedImageDatasets <-- SemanticSearcher: Consumes
+operator --> SemanticSearcher: Uses
+client --> SemanticSearcher: Uses
+@enduml
