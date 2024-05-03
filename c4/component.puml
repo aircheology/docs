@@ -12,13 +12,23 @@ database SemSearchDB [
 ]
 
 rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
-    rectangle VocTreeSvc #crimson [
-        Vocabulary Tree Service
+    rectangle CaptionVocTreeSvc #crimson [
+        Captions Vocabulary Tree Service
         ---
         Provides use cases for
         training, populating,
         replacing and searching
-        a vocabulary tree index.
+        a vocabulary tree index
+        based on caption features.
+    ]
+    rectangle ImVocTreeSvc #crimson [
+        Images Vocabulary Tree Service
+        ---
+        Provides use cases for
+        training, populating,
+        replacing and searching
+        a vocabulary tree index
+        based on image features.
     ]
     rectangle SemSearchSvc #crimson [
         Semantic Search Service
@@ -39,15 +49,19 @@ rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
     ]
     rectangle ImageSearchController as "Image Search Controller" #crimson
 
-    SemSearchSvc --> VocTreeSvc: Uses
+    SemSearchSvc --> CaptionVocTreeSvc: Uses
+    SemSearchSvc --> ImVocTreeSvc: Uses
     SemSearchSvc --> SemSearchDB: Uses
-    VocTreeSvc --> SemSearchDB: Uses
+    CaptionVocTreeSvc --> SemSearchDB: Uses
+    ImVocTreeSvc --> SemSearchDB: Uses
     
-    TrainController --> VocTreeSvc: Uses
+    TrainController --> CaptionVocTreeSvc: Uses
+    TrainController --> ImVocTreeSvc: Uses
     ImageSearchController --> SemSearchSvc: Uses
     operator --> TrainController: Trigger training
     
     SemSearchSvc --> ImageStore: Read images
+    ImVocTreeSvc --> ImageStore: Read images
 
     SemSearchUI --> ImageSearchController: Uses
 }

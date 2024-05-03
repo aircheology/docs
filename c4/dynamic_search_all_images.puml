@@ -1,0 +1,36 @@
+@startuml search_all_images
+node SemSearchUI [
+    Semantic Search UI
+]
+
+database SemSearchDB [
+    Semantic Search DB
+]
+
+folder ImageStore as "Image Store"
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle SemSearchSvc #crimson [
+        Semantic Search Service
+    ]
+
+    rectangle ImVocTreeSvc #crimson [
+        Images Vocabulary Tree Service
+    ]
+
+    rectangle CaptionVocTreeSvc #crimson [
+        Captions Vocabulary Tree Service
+    ]
+
+    SemSearchUI --> SemSearchSvc: 1: Search for up to N images \nwith similar captions \nto input caption
+    SemSearchSvc --> CaptionVocTreeSvc: 2: Find IDs of images \nwith similar captions \nto input caption
+    CaptionVocTreeSvc --> SemSearchDB: 3: Iterate tree nodes
+    CaptionVocTreeSvc --> SemSearchSvc: 4: Return IDs of images \nmatching input caption
+    SemSearchSvc --> ImageStore: 5: Read matrices of \nmatching images
+    SemSearchSvc --> ImVocTreeSvc: 6: Find IDs of images with matrix \nfeatures similar to a subset of the \nunion of the matrix features of all \nlabeled images with a similar caption
+    ImVocTreeSvc --> SemSearchDB: 7: Iterate tree nodes
+    ImVocTreeSvc --> SemSearchSvc: 8: Return IDs of images with \nmatching matrix features
+
+    SemSearchSvc --> SemSearchUI: 9: Return IDs of images \nmatching input caption
+}
+@enduml

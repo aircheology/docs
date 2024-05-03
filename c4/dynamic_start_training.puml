@@ -1,0 +1,34 @@
+@startuml start_training
+person operator
+
+folder ImageStore as "Image Store"
+
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle CaptionVocTreeSvc #crimson [
+        Captions Vocabulary Tree Service
+    ]
+    rectangle ImVocTreeSvc #crimson [
+        Images Vocabulary Tree Service
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+    ]
+
+    CaptionVocTreeSvc --> SemSearchDB: 3: Fetch metadata of \na subset of the images
+    CaptionVocTreeSvc --> SemSearchDB: 4: Store green tree root \nnode and training job \nfor root node
+
+    ImVocTreeSvc --> SemSearchDB: 6: Fetch metadata of \na subset of the images
+    ImVocTreeSvc --> SemSearchDB: 8: Store green tree root \nnode and training job \nfor root node
+    
+    TrainController --> CaptionVocTreeSvc: 2: Start training
+    TrainController --> ImVocTreeSvc: 5: Start training
+    operator --> TrainController: 1: Trigger training
+    TrainController --> operator: 9: Acknowledge training started
+    
+    ImVocTreeSvc --> ImageStore: 7: Read image matrices
+}
+@enduml

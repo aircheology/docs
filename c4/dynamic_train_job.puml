@@ -1,0 +1,22 @@
+@startuml train_job
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle VocTreeSvc #crimson [
+        Vocabulary Tree Service
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+    ]
+
+    TrainController --> VocTreeSvc: 1: Try handling train job
+    
+    VocTreeSvc --> SemSearchDB: 2: Fetch train \njob
+    VocTreeSvc --> SemSearchDB: 3: Store child \nnodes of node \nfrom train job
+    VocTreeSvc --> SemSearchDB: 4: Store train job for \neach new node
+    VocTreeSvc --> SemSearchDB: 5: Acknowledge completion \nof fetched train job
+
+}
+@enduml

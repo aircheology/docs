@@ -1,0 +1,26 @@
+@startuml search_labeled_images
+
+node SemSearchUI [
+    Semantic Search UI
+]
+
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle SemSearchSvc #crimson [
+        Semantic Search Service
+    ]
+
+    rectangle CaptionVocTreeSvc #crimson [
+        Captions Vocabulary Tree Service
+    ]
+
+    SemSearchUI --> SemSearchSvc: 1: Search for up to N images \nwith similar captions \nto input caption
+    SemSearchSvc --> CaptionVocTreeSvc: 2: Find IDs of images \nwith similar captions \nto input caption
+    CaptionVocTreeSvc --> SemSearchDB: 3: Iterate tree nodes
+    CaptionVocTreeSvc --> SemSearchSvc: 4: Return IDs of images \nmatching input caption
+    SemSearchSvc --> SemSearchUI: 5: Return IDs of images \nmatching input caption
+}
+@enduml
