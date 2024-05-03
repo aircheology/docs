@@ -1,0 +1,20 @@
+@startuml replace_vtree
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle VocTreeSvc #crimson [
+        Vocabulary Tree Service
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+    ]
+
+    TrainController --> VocTreeSvc: 1: Try replacing any inactive \n(aka blue) trees
+    
+    VocTreeSvc --> SemSearchDB: 2: Find inactive tree
+    VocTreeSvc --> SemSearchDB: 3: Delete inactive tree
+
+}
+@enduml

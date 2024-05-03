@@ -1,0 +1,21 @@
+@startuml populate_captions_vtree
+database SemSearchDB [
+    Semantic Search DB
+]
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle CaptionVocTreeSvc #crimson [
+        Captions Vocabulary Tree Service
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+    ]
+
+    TrainController --> CaptionVocTreeSvc: 1: Try populate vocabulary tree
+    CaptionVocTreeSvc --> SemSearchDB: 2: Fetch root of tree \nwith no pending \ntrain jobs
+    CaptionVocTreeSvc --> SemSearchDB: 3: Fetch captions of batch \nof images without features \nin the tree
+    CaptionVocTreeSvc --> SemSearchDB: 4: Add features \nto leaves
+    CaptionVocTreeSvc --> SemSearchDB: 5: Partition leaves \nwith many features
+
+}
+@enduml

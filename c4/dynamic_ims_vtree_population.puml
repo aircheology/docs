@@ -1,0 +1,24 @@
+@startuml populate_ims_vtree
+database SemSearchDB [
+    Semantic Search DB
+]
+
+folder ImageStore as "Image Store"
+
+rectangle SemanticSearchSvc as "Semantic Search Service" #line:crimson {
+    rectangle ImVocTreeSvc #crimson [
+        Images Vocabulary Tree Service
+    ]
+    rectangle TrainController #crimson [
+        Train Controller
+    ]
+
+    TrainController --> ImVocTreeSvc: 1: Try populate vocabulary tree
+    ImVocTreeSvc --> SemSearchDB: 2: Fetch root of tree \nwith no pending \ntrain jobs
+    ImVocTreeSvc --> SemSearchDB: 3: Fetch IDs of batch \nof images without features \nin the tree
+    ImVocTreeSvc --> ImageStore: 4: Read matrices of \nfetched images 
+    ImVocTreeSvc --> SemSearchDB: 5: Add features \nto leaves
+    ImVocTreeSvc --> SemSearchDB: 6: Partition leaves \nwith many features
+
+}
+@enduml
